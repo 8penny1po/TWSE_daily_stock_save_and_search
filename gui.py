@@ -4,6 +4,7 @@ from tkinter import messagebox
 from datetime import datetime
 import save_stock
 import search_stock
+import up_and_down_search
 root=tk.Tk()
 root.title('TwStockSearch')
 root.geometry('600x400')
@@ -13,6 +14,8 @@ def save_button():
     
 button_save=tk.Button(root,text='儲存昨日資料',command=save_button)
 button_save.grid(row=0,column=0)
+label_tip=tk.Label(root,text='股票代碼和漲跌價差請擇一使用')
+label_tip.grid(row=0,column=1)
 label_code=tk.Label(root,text='輸入代碼:')
 label_code.grid(row=1,column=0)
 entry_code=tk.Entry(root)
@@ -24,6 +27,10 @@ label_date.grid(row=2,column=0)
 entry_date=tk.Entry(root)
 entry_date.grid(row=2,column=1)
 
+label_change=tk.Label(root,text='輸入漲跌價差(all為不使用):')
+label_change.grid(row=3,column=0)
+entry_change=tk.Entry(root)
+entry_change.grid(row=3,column=1)
 
 tree=ttk.Treeview(root,columns=('date','code','name','open','highest','lowest','close','volume','value','change','transaction'),show='headings')
 tree.heading('date',text='日期')
@@ -65,11 +72,15 @@ def gsd():
     tree.delete(*tree.get_children())
     code=entry_code.get()
     date=entry_date.get()
-    if not code:
-        messagebox.showwarning('error','請輸入股票代碼')
+    change=entry_change.get()
+    if not code and change=='all':
+        messagebox.showwarning('error','請輸入股票代碼或漲跌價差')
         return
-    elif not date:
-        messagebox.showwarning('error','請輸入日期')
+    elif not date and change=='all':
+        messagebox.showwarning('error','請輸入日期或漲跌價差')
+        return
+    elif code!=None and change!='all':
+        messagebox.showwarning('error','股票代碼和漲跌價差請擇一使用')
         return
     if date!='all':
         try:
@@ -77,7 +88,16 @@ def gsd():
         except ValueError:
             messagebox.showwarning('error','請輸入正確日期或格式(YYYYMMDD)')
             return
-    result=search_stock.get_stock_data(code,date)
+    if change!='all':
+        try:
+            float(change)
+        except ValueError:
+            messagebox.showwarning('error','請輸入數字或all')
+            return
+    if change=='all':
+        result=search_stock.get_stock_data(code,date)
+    else:
+        result=up_and_down_search.get_change_data(date,change)
     for i in result:
         tree.insert('','end',values=i)
     tree.grid(row=4,column=0,sticky='news')
@@ -90,6 +110,6 @@ def gsd():
     search_results_t.grid(row=5,column=0)
     search_results_t.insert('1.0',str(result))'''
 button_search=tk.Button(root,text='查詢',command=gsd)
-button_search.grid(row=3,column=0)
+button_search.grid(row=3,column=2)
 
 root.mainloop()
