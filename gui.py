@@ -79,7 +79,7 @@ def gsd():
     elif not date and change=='all':
         messagebox.showwarning('error','請輸入日期或漲跌價差')
         return
-    elif code!=None and change!='all':
+    elif code==True and change!='all':
         messagebox.showwarning('error','股票代碼和漲跌價差請擇一使用')
         return
     if date!='all':
