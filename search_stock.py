@@ -10,15 +10,21 @@ def get_stock_data(askcode,date):
     #print(cursor.fetchall())
 
     while f==0:
-        if date=='all':
+        if date=='all' and askcode!='':
             cursor.execute('SELECT * FROM stocks WHERE code=?',(askcode,))
            
             f=1
+        elif date=='all' and not askcode:
+            cursor.execute('SELECT * FROM stocks')
+            f=2
+        elif not askcode:
+            cursor.execute('SELECT * FROM stocks WHERE date=?',(date,))
+            f=3
         else:
             cursor.execute('SELECT * FROM stocks WHERE code=? AND date=?',(askcode,date))
-            f=2
+            f=4
     row=cursor.fetchall()
-    #print('日期,代碼,名稱,開盤價,最高價,最低價,收盤價,成交股數,成交金額,漲跌價差,成交筆數')
+    print(f)
     '''for i in row:
         print(i)'''
     return row

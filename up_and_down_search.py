@@ -5,17 +5,31 @@ def get_change_data(date,change):
     dbp=os.path.join(cd,'stock.db')
     conn = sqlite3.connect(dbp)
     cursor = conn.cursor()
+    print(change)
+    cursor.execute("SELECT typeof(change), change FROM stocks LIMIT 10;")
+    print(cursor.fetchall())
+
     if date!='all':
         if float(change)>0:
             cursor.execute("SELECT * FROM stocks WHERE  date=? AND change>=?", (date, change))
+            print(1)
         else:
             cursor.execute("SELECT * FROM stocks WHERE date=? AND change<=?", (date, change))
+            print(2)
     else:
         if float(change)>0:
-            cursor.execute("SELECT * FROM stocks WHERE change>?", (change,))
+            cursor.execute("SELECT * FROM stocks WHERE change>=?", (change,))
+            print(3)
         else:
-            cursor.execute("SELECT * FROM stocks WHERE change<?", (change,))
+            cursor.execute("SELECT * FROM stocks WHERE change<=?", (change,))
+            print(4)
 
     data = cursor.fetchall()
     conn.close()
     return data
+'''a=get_change_data('20260911',50)
+print(type(a))
+print(a)
+for i in a:
+    print(i)'''
+
