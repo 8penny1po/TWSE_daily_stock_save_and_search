@@ -43,38 +43,25 @@ def get_data(d):
                     PRIMARY KEY(date,code))''')
     for i in response['tables'][8]['data']:
         if '-' in i[9]:
-            conn.execute('''INSERT INTO stocks(
-                        date,
-                        code,
-                        name,
-                        volum,
-                        tx,
-                        value,
-                        open,
-                        high,
-                        low,
-                        close,
-                        change,
-                        peratio)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                    (d, i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], '-'+i[10], i[15]))
+            datalist=[(d, i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], '-'+i[10], i[15])]
         else:
-            conn.execute('''INSERT INTO stocks(
-                                date,
-                                code,
-                                name,
-                                volum,
-                                tx,
-                                value,
-                                open,
-                                high,
-                                low,
-                                close,
-                                change,
-                                peratio)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                            (d, i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[10], i[15]))
-        conn.commit()
+            datalist=[(d, i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[10], i[15])]
+        conn.executemany('''INSERT INTO stocks(
+                    date,
+                    code,
+                    name,
+                    volum,
+                    tx,
+                    value,
+                    open,
+                    high,
+                    low,
+                    close,
+                    change,
+                    peratio)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                datalist)
+    conn.commit()
     conn.close()
 #a=input('請輸入日期(YYYYMMDD):')
 #get_data(a)
