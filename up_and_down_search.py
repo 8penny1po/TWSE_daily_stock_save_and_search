@@ -11,17 +11,17 @@ def get_change_data(date,change):
 
     if date!='all':
         if float(change)>0:
-            cursor.execute("SELECT * FROM stocks WHERE  date=? AND change>=?", (date, change))
+            cursor.execute("SELECT * FROM stocks WHERE  date=? AND change>=? ORDER BY change DESC", (date, change))
             print(1)
         else:
-            cursor.execute("SELECT * FROM stocks WHERE date=? AND change<=?", (date, change))
+            cursor.execute("SELECT * FROM stocks WHERE date=? AND change<=? ORDER BY change DESC", (date, change))
             print(2)
     else:
         if float(change)>0:
-            cursor.execute("SELECT * FROM stocks WHERE change>=?", (change,))
+            cursor.execute("SELECT * FROM stocks WHERE change>=? ORDER BY change DESC", (change,))
             print(3)
         else:
-            cursor.execute("SELECT * FROM stocks WHERE change<=?", (change,))
+            cursor.execute("SELECT * FROM stocks WHERE change<=? ORDER BY change DESC", (change,))
             print(4)
 
     data = cursor.fetchall()
