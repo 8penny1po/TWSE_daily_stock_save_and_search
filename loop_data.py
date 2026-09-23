@@ -7,7 +7,6 @@ def loop_save(date,rang):
     nowmm=int(date[4:6])
     dd=int(date[6:8])
     while ((mm+int(rang))%12)!=(nowmm%12):
-        dd-=1
         if dd==0:
             mm-=1
             if mm==0:
@@ -24,6 +23,7 @@ def loop_save(date,rang):
                     dd=28
         date2=str(yyyy)+str(mm).zfill(2)+str(dd).zfill(2)
         better_bug.get_data(date2)
+        dd-=1
         print(date2)
 #a,b=input('日期和範圍').split()
 #loop_save(a,b)
