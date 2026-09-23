@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import sqlite3
+import time
 print(os.getcwd())
 
 def get_data(d):
@@ -46,7 +47,7 @@ def get_data(d):
             datalist=[(d, i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], '-'+i[10], i[15])]
         else:
             datalist=[(d, i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[10], i[15])]
-        conn.executemany('''INSERT INTO stocks(
+        conn.executemany('''INSERT OR IGNORE INTO stocks(
                     date,
                     code,
                     name,
@@ -63,5 +64,6 @@ def get_data(d):
                 datalist)
     conn.commit()
     conn.close()
+    time.sleep(1)
 #a=input('請輸入日期(YYYYMMDD):')
 #get_data(a)

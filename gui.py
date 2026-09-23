@@ -6,38 +6,50 @@ import save_stock
 import search_stock
 import up_and_down_search
 import better_bug
+import loop_data
 root=tk.Tk()
 root.title('TwStockSearch')
 root.geometry('600x400')
 def save_button():
-    
     date=entry_date.get()
     if not date:
         messagebox.showwarning('error','請輸入日期(YYYYMMDD)')
         return
-    button_save['text']=f'已儲存 ({date})'
-    better_bug.get_data(date)
+    loop=entry_loop.get()
+    button_save['text']='等待中'
+    if not loop:
+        button_save['text']=f'已儲存 ({date})'
+        better_bug.get_data(date)
+    else:
+        loop=int(loop)
+        if loop<=0:
+            messagebox.showwarning('error','請輸入1以上的數字')
+            return
+  
+        loop_data.loop_save(date,loop)
+        button_save['text']='已儲存'
 
-    
+entry_loop=tk.Entry(root)
+entry_loop.grid(row=1,column=1)
 button_save=tk.Button(root,text='儲存資料',command=save_button)
 button_save.grid(row=0,column=0)
-label_tip=tk.Label(root,text='股票代碼和漲跌價差請擇一使用')
-label_tip.grid(row=0,column=1)
+loop_tip=tk.Label(root,text='輸入要往回查詢的月數(用於補資料，不用可忽略)')
+loop_tip.grid(row=1,column=0)
 label_code=tk.Label(root,text='輸入代碼:')
-label_code.grid(row=1,column=0)
+label_code.grid(row=2,column=0)
 entry_code=tk.Entry(root)
-entry_code.grid(row=1,column=1)
+entry_code.grid(row=2,column=1)
 
 
 label_date=tk.Label(root,text='輸入日期(YYYYMMDD或all):')
-label_date.grid(row=2,column=0)
+label_date.grid(row=3,column=0)
 entry_date=tk.Entry(root)
-entry_date.grid(row=2,column=1)
+entry_date.grid(row=3,column=1)
 
 label_change=tk.Label(root,text='輸入漲跌價差(不使用的話請忽略):')
-label_change.grid(row=3,column=0)
+label_change.grid(row=4,column=0)
 entry_change=tk.Entry(root)
-entry_change.grid(row=3,column=1)
+entry_change.grid(row=4,column=1)
 
 tree=ttk.Treeview(root,columns=('date','code','name','volume','tx','value','open','highest','lowest','close','change','peratio'),show='headings')
 tree.heading('date',text='日期')
@@ -66,7 +78,7 @@ tree.column("change", width=100)
 tree.column("tx", width=100)
 tree.column("peratio", width=100)
 
-root.grid_rowconfigure(4,weight=1)
+root.grid_rowconfigure(5,weight=1)
 scrollbery=ttk.Scrollbar(root)
 scrollbery.config(command=tree.yview)
 tree.config(yscrollcommand=scrollbery.set)
@@ -100,9 +112,9 @@ def gsd():
         result=up_and_down_search.get_change_data(date,change)
     for i in result:
         tree.insert('','end',values=i)
-    tree.grid(row=4,column=0,sticky='news')
-    scrollbery.grid(row=4,column=1,sticky='nsw')
-    scrollberx.grid(row=5,column=0,sticky='new')
+    tree.grid(row=5,column=0,sticky='news')
+    scrollbery.grid(row=5,column=1,sticky='nsw')
+    scrollberx.grid(row=6,column=0,sticky='new')
 
 '''    search_results=tk.Label(root,text='search results:')
     search_results.grid(row=4,column=0)
@@ -110,6 +122,6 @@ def gsd():
     search_results_t.grid(row=5,column=0)
     search_results_t.insert('1.0',str(result))'''
 button_search=tk.Button(root,text='查詢',command=gsd)
-button_search.grid(row=3,column=2)
+button_search.grid(row=4,column=2)
 
 root.mainloop()
