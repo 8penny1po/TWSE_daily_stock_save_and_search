@@ -7,6 +7,7 @@ import search_stock
 import up_and_down_search
 import better_bug
 import loop_data
+import plotly_test
 root=tk.Tk()
 root.title('TwStockSearch')
 root.geometry('600x400')
@@ -28,10 +29,20 @@ def save_button():
   
         loop_data.loop_save(date,loop)
         button_save['text']='已儲存'
+def plot_button():
+    code=entry_code.get()
+    date=entry_date.get()
+    if date=='':
+         messagebox.showwarning('error','請輸入日期')
+    elif code=='':
+        messagebox.showwarning('error','請輸入股票代碼')
+    pplt=plotly_test.plot_show(date,code)
 
+    if pplt==1:
+        messagebox.showwarning('error','資料不足請確保有至少40天的資料')
 entry_loop=tk.Entry(root)
 entry_loop.grid(row=1,column=1)
-button_save=tk.Button(root,text='儲存資料',command=save_button)
+button_save=tk.Button(root,text='爬取資料',command=save_button)
 button_save.grid(row=0,column=0)
 loop_tip=tk.Label(root,text='輸入要往回查詢的月數(用於補資料，不用可忽略)')
 loop_tip.grid(row=1,column=0)
@@ -39,8 +50,8 @@ label_code=tk.Label(root,text='輸入代碼:')
 label_code.grid(row=2,column=0)
 entry_code=tk.Entry(root)
 entry_code.grid(row=2,column=1)
-
-
+button_show=tk.Button(root,text='顯示VWMA&SMA圖',command=plot_button)
+button_show.grid(row=2,column=2)
 label_date=tk.Label(root,text='輸入日期(YYYYMMDD或all):')
 label_date.grid(row=3,column=0)
 entry_date=tk.Entry(root)
